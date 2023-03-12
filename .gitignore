@@ -1,0 +1,13 @@
+.scratch/
+.Rproj.user
+.RData
+data/
+*.tiff
+.Rhistory
+.Rbuildignore
+*#*
+*_cache
+manuscript_files
+Rplots*
+*.log
+export/
