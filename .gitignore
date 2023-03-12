@@ -8,6 +8,10 @@ data/
 *#*
 *_cache
 manuscript_files
+results/
 Rplots*
 *.log
 export/
+*.docx
+*.pdf
+
