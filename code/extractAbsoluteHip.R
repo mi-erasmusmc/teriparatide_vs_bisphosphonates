@@ -7,13 +7,17 @@
 #     data/raw/mappedOverallAbsoluteResults.rds
 # Output:
 #     data/processed/hipFractureAbsolute.rds
-    
-args <- commandArgs(trailingOnly = TRUE)    
-args_stratOutcome <- args[1]
-args_estOutcome <- args[2]
-args_analysisType <- args[3]
 
 library(tidyverse)
+
+args <- commandArgs(trailingOnly = TRUE)
+protocol <- args[1]
+estimand <- args[2]
+analysis <- args[3]
+args_stratOutcome <- as.numeric(args[4])
+
+analType <- paste(protocol, estimand, analysis, sep = "_")
+
 
 absoluteResults <- readRDS("data/raw/mappedOverallAbsoluteResults.rds") %>%
     tibble()
@@ -21,9 +25,7 @@ absoluteResults <- readRDS("data/raw/mappedOverallAbsoluteResults.rds") %>%
 fileName <- paste0(
   paste(
     "hipFractureAbsolute",
-    args_analysisType,
-    args_stratOutcome,
-    args_estOutcome,
+    analType,
     sep = "_"
   ),
   ".rds"

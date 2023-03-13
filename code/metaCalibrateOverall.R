@@ -12,12 +12,18 @@ library(tidyverse)
 
 args = commandArgs(trailingOnly = TRUE)
 
+protocol <- args[1]
+estimand <- args[2]
+analysis <- args[3]
+
+analType <- paste(protocol, estimand, analysis, sep = "_")
+
 fileDir <- file.path(
   "data/processed",
   paste0(
     paste(
       "calibrateOverallResults",
-      args[1],
+      analType,
       sep = "_"
     ),
     ".rds"
@@ -34,21 +40,21 @@ metaAnalysis <- function(data) {
     method.tau = "PM",
     studlab = data$database
   )
-  
+
   res <- tibble(
     hr = exp(metaRes$TE.random),
     lower = exp(metaRes$lower.random),
     upper = exp(metaRes$upper.random)
-  ) 
-  
+  )
+
   return(res)
-  
+
 }
 
 fileName <- paste0(
   paste(
     "metaCalibrateOverall",
-    args[1],
+    analType,
     sep = "_"
   ),
   ".rds"

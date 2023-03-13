@@ -10,7 +10,7 @@
 #   data/raw/map_outcomes.rds
 #   data/raw/map_exposures.rds
 # Output:
-# 
+#
 # Notes:
 #   Add mean predicted risk, and rectangle limits to absolute dataframe
 
@@ -18,22 +18,13 @@ library(tidyverse)
 
 args = commandArgs(trailingOnly = TRUE)
 
-suffix <- args[1]
-analysis <- args[2]
-stratification <- as.numeric(args[3])
+protocol <- args[1]
+estimand <- args[2]
+analysis <- args[3]
+
+analType <- paste(protocol, estimand, analysis, sep = "_")
 fileType <- "tiff"
 
-if (analysis == "itt_att_1095_q_25_75") {
-  riskGroupLabels = c(
-    "Lower 75%\nhip fracture risk",
-    "Upper 25%\nhip fracture risk"
-  )
-} else if (analysis == "itt_att_1095_gl") {
-  riskGroupLabels = c(
-    "Lower \nguideline risk", 
-    "Upper \nguideline risk"
-  )
-}
 
 mappedOverallAbsoluteResults <- readRDS(
   "data/raw/mappedOverallAbsoluteResults.rds"
@@ -79,13 +70,30 @@ prepareDataset <- function(data) {
     )
 }
 
+absolute <- readRDS("data/raw/mappedOverallAbsoluteResults.rds")
 
-absolute <- readRDS("data/raw/mappedOverallAbsoluteResults.rds") %>%
+if (analysis == "1095_custom_10") {
+  riskGroupLabels = c(
+    "Hip fracture\nrisk below 2.5%",
+    "Hip fracture\nrisk above 2.5%"
+  )
+  stratification <- 5402
+  absolute <- absolute %>%
+    filter(!(riskStratum == "Q2" & database == "ccae"))
+} else {
+  riskGroupLabels = c(
+    "Lower \nguideline risk",
+    "Upper \nguideline risk"
+  )
+  stratification <- 5403
+}
+
+absolute <- absolute %>%
     filter(
-        analysisType == analysis,
+        analysisType == analType,
         stratOutcome == stratification
     ) %>%
-  prepareDataset() %>% 
+  prepareDataset() %>%
     mutate(
         estimate = 100 * estimate,
         lower    = 100 * lower,
@@ -122,8 +130,8 @@ absolutePlot <- ggplot(
     y = estimate,
     ymin = lower,
     ymax = upper,
-    color = estOutcome,
-    group = estOutcome
+    color = database,
+    group = database
   )
 ) +
   geom_point(size = 4.5, position = position_dodge(width = .6), key_glyph = "rect") +
@@ -135,7 +143,7 @@ absolutePlot <- ggplot(
     name = "Absolute risk reduction (%)"
   ) +
   # xlab("Risk quarter") +
-  facet_grid(~database, scales = "free") +
+  facet_grid(~estOutcome, scales = "free") +
   geom_hline(
     aes(yintercept = 0)
   ) +
@@ -143,26 +151,19 @@ absolutePlot <- ggplot(
     values = c(
       "#264653",
       "#2A9D8F",
-      "#E76F51"
-      # "#0450B4",
-      # "#1184A7",
+      "#E76F51",
+      # "#0450B4"
+      # "#1184A7"
       # "#6FB1A0",
-      # "#B4418E",
+      "#B4418E"
       # "#EA515F",
       # "#FEA802"
     ),
     breaks = c(
-      "Hip fracture",
-      "Major osteoporotic fracture",
-      "Vertebral fracture"
-      # "hospitalization with heart failure",
-      # "stroke",
-      # "abnormal weight gain",
-      # "angioedema",
-      # "cough",
-      # "hyperkalemia",
-      # "hypokalemia",
-      # "hypotension"
+      "CCAE",
+      "MDCR",
+      "Optum-EHR",
+      "Optum-DOD"
     )
   ) +
   guides(col = guide_legend(nrow = 1)) +
@@ -179,15 +180,17 @@ absolutePlot <- ggplot(
     axis.text = element_text(size = 20),
     strip.text = element_text(size = 35, color = "white"),
     strip.background = element_rect(fill = "#127475"),
-    panel.spacing.y = unit(8, "mm")
+    panel.spacing.y = unit(8, "mm"),
+    plot.background  = element_rect(fill = "#F5F5F5"),
+    panel.background  = element_rect(fill = "#F5F5F5"),
+    legend.background  = element_rect(fill = "#F5F5F5")
   )
 
 if (fileType == "tiff") {
   fileName <- paste0(
     paste(
       "plotAbsoluteRiskStratified",
-      analysis,
-      stratification,
+      analType,
       sep = "_"
     ),
     ".tiff"
@@ -197,9 +200,9 @@ if (fileType == "tiff") {
       "figures",
       fileName
     ),
-    absolutePlot, 
-    compression = "lzw", 
-    width       = 650, 
+    absolutePlot,
+    compression = "lzw",
+    width       = 650,
     height      = 350,
     units       = "mm",
     dpi         = 300
@@ -218,8 +221,8 @@ if (fileType == "tiff") {
       "figures",
       fileName
     ),
-    absolutePlot, 
-    width       = 650, 
+    absolutePlot,
+    width       = 650,
     height      = 350,
     units       = "mm"
   )

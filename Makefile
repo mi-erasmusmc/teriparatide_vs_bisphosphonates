@@ -1,101 +1,59 @@
-data/processed/calibrateOverallResults_att.rds: code/calibrateOverall.R\
+# =============================================================================================================================
+# - On treatment analyses
+# - Risk strata: hip fracture
+# =============================================================================================================================
+data/processed/calibrateOverallResults_on_treatment_att_1095_custom_10.rds: code/calibrateOverall.R\
 	data/raw/mappedOverallResultsNegativeControls.rds\
 	data/raw/mappedOverallResults.rds
-	$< att ccae optum_ehr optum_extended_dod mdcr
+	$< on_treatment att 1095_custom_10 ccae optum_ehr optum_extended_dod mdcr
 
-data/processed/calibrateOverallResults_ate.rds: code/calibrateOverall.R\
-	data/raw/mappedOverallResultsNegativeControls.rds\
-	data/raw/mappedOverallResults.rds
-	$< ate ccae optum_ehr optum_extended_dod mdcr
+data/processed/metaCalibrateOverall_on_treatment_att_1095_custom_10.rds : code/metaCalibrateOverall.R\
+	data/processed/calibrateOverallResults_on_treatment_att_1095_custom_10.rds
+	$< on_treatment att 1095_custom_10
 
-data/processed/metaCalibrateOverall_att.rds    : code/metaCalibrateOverall.R\
-	data/processed/calibrateOverallResults_att.rds
-	$< att 
+figures/plotMetaOverall_on_treatment_att.tiff : code/plotMetaOverall.R \
+	data/processed/calibrateOverallResults_on_treatment_att_1095_custom_10.rds\
+	data/processed/metaCalibrateOverall_on_treatment_att_1095_custom_10.rds 
+	$< on_treatment att 1095_custom_10
 
-data/processed/metaCalibrateOverall_ate.rds    : code/metaCalibrateOverall.R\
-	data/processed/calibrateOverallResults_ate.rds
-	$< ate 
-
-data/processed/calibrateRiskStratified_att.rds : code/calibrateRiskStratified.R\
+data/processed/calibrateRiskStratified_on_treatment_att_1095_custom_10.rds : code/calibrateRiskStratified.R\
 	data/raw/negativeControls.rds\
 	data/raw/mappedOverallRelativeResults.rds
-	$< att ccae optum_ehr optum_extended_dod mdcr
+	$< on_treatment att 1095_custom_10 ccae optum_ehr optum_extended_dod mdcr
 
-data/processed/calibrateRiskStratified_ate.rds : code/calibrateRiskStratified.R\
-	data/raw/negativeControls.rds\
-	data/raw/mappedOverallRelativeResults.rds
-	$< ate ccae optum_ehr optum_extended_dod mdcr
+data/processed/metaCalibrateRiskStratified_on_treatment_att_1095_custom_10.rds : code/metaCalibrateRiskStratified.R\
+	data/processed/calibrateRiskStratified_on_treatment_att_1095_custom_10.rds
+	$< on_treatment att 1095_custom_10
 
-data/processed/metaCalibrateRiskStratified_att.rds : code/metaCalibrateRiskStratified.R\
-	data/processed/calibrateRiskStratified_att.rds
-	$< att
-
-data/processed/metaCalibrateRiskStratified_ate.rds : code/metaCalibrateRiskStratified.R\
-	data/processed/calibrateRiskStratified_ate.rds
-	$< ate
-
-data/processed/metaCalibrateRiskStratified_age_50_tr_1_q_25_75.rds : code/metaCalibrateRiskStratified.R\
-	data/processed/calibrateRiskStratified_age_50_tr_1_q_25_75.rds
-	$< age_50_tr_1_q_25_75 
-
-data/processed/calibrateRiskStratified_age_50_tr_1_gl.rds : code/calibrateRiskStratified.R\
-	data/raw/negativeControls.rds\
-	data/raw/mappedOverallRelativeResults.rds
-	$< age_50_tr_1_gl optum_ehr optum_extended_dod
-
-data/processed/metaCalibrateRiskStratified_age_50_tr_1_gl.rds : code/metaCalibrateRiskStratified.R\
-	data/processed/calibrateRiskStratified_age_50_tr_1_gl.rds
-	$< age_50_tr_1_gl 
-
-data/processed/hipFractureAbsolute_age_50_tr_1_q_25_75_101_101 : code/extractAbsoluteHip.R\
-	data/raw/mappedOverallAbsoluteResults.rds
-	$< 101 101 age_50_tr_1_q_25_75
-
-data/processed/hipFractureAbsolute_age_50_tr_1_q_25_75_101_102 : code/extractAbsoluteHip.R\
-	data/raw/mappedOverallAbsoluteResults.rds
-	$< 101 102 age_50_tr_1_q_25_75
-
-data/processed/hipFractureAbsolute_age_50_tr_1_q_25_75_101_103 : code/extractAbsoluteHip.R\
-	data/raw/mappedOverallAbsoluteResults.rds
-	$< 101 103 age_50_tr_1_q_25_75
-
-data/processed/hipFractureAbsolute_age_50_tr_1_gl_101_101 : code/extractAbsoluteHip.R\
-	data/raw/mappedOverallAbsoluteResults.rds
-	$< 101 101 age_50_tr_1_gl
-
-figures/plotMeta.tiff : code/plotMetaOverall.R \
-	data/processed/calibrateOverallResults_att.rds\
-	data/processed/metaCalibrateOverall_att.rds
-	$< att
-
-figures/plotMetaRiskStratified_itt_att_1095_q_25_75_5402.tiff : code/plotMetaRiskStratified.R\
+figures/plotMetaRiskStratified_on_treatment_att_1095_custom_10.tiff : code/plotMetaRiskStratified.R\
 	data/raw/map_outcomes.rds\
-	data/processed/calibrateOverallResults_att.rds\
-	data/processed/metaCalibrateOverall_att.rds
-	$< att itt_att_1095_q_25_75 5402
+	data/processed/calibrateRiskStratified_on_treatment_att_1095_custom_10.rds\
+	data/processed/metaCalibrateRiskStratified_on_treatment_att_1095_custom_10.rds
+	$< on_treatment att 1095_custom_10
 
-figures/plotMetaRiskStratified_itt_att_1095_gl_5403.tiff : code/plotMetaRiskStratified.R\
-	data/raw/map_outcomes.rds\
-	data/processed/calibrateOverallResults_att.rds\
-	data/processed/metaCalibrateOverall_att.rds
-	$< att itt_att_1095_gl 5403
-
-figures/plotAbsoluteRiskStratified_itt_att_1095_gl_5403.tiff : code/plotAbsoluteRiskStratified.R\
+figures/plotAbsoluteRiskStratified_on_treatment_att_1095_10.tiff : code/plotAbsoluteRiskStratified.R\
 	data/raw/mappedOverallAbsoluteResults.rds\
 	data/raw/map_outcomes.rds\
 	data/raw/map_exposures.rds
-	$< att itt_att_1095_gl 5403
+	$< on_treatment att 1095_custom_10
 
-figures/OverallNcPlot.tiff : code/PlotNegativeControls.R\
+figures/overallNcPlot_on_treatment_att_1095_custom_10.tiff : code/PlotNegativeControls.R\
 	data/raw/mappedOverallResultsNegativeControls.rds\
 	data/raw/mappedOverallResults.rds
-	$<
+	$< on_treatment att 1095_custom_10
 
-figures/OverallCovariateBalance.tiff : code/PlotCovariateBalance.R
-	$<
+figures/overallCovariateBalance_on_treatment_att_1095_custom_10.tiff : code/PlotCovariateBalance.R
+	$< on_treatment att 1095_custom_10
 
-figures/OverallPsDensity.tiff : code/PlotPsDensity.R
-	$<
+figures/overallPsDensity_on_treatment_att_1095_custom_10.tiff : code/PlotPsDensity.R
+	$< on_treatment att 1095_custom_10
+
+
+
+
+
+
+
 
 figures/PsDensityRiskStratifed_att_q_25_75.tiff : code/PlotPsRiskStratified.R
 	$< q_25_75 att 5402 5402 tiff

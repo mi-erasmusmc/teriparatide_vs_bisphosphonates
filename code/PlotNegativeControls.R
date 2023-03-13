@@ -10,33 +10,46 @@
 library(tidyverse)
 library(EmpiricalCalibration)
 
-databases <- c("ccae", "mdcr", "optum_extended_dod", "optum_ehr")
-databaseLabels <- c("CCAE", "MDCR","Optum-DOD", "Optum-EHR")
+args = commandArgs(trailingOnly = TRUE)
+protocol <- args[1]
+estimand <- args[2]
+analysis <- args[3]
+
+if (analysis == "1095_custom_10") {
+  stratification <- 5402
+} else {
+  stratification <- 5403
+}
+
+analType <- paste(protocol, estimand, analysis, sep = "_")
+
+databases <- c("ccae", "mdcr",  "optum_extended_dod", "optum_ehr")
+databaseLabels <- c("CCAE", "MDCR", "Optum-DOD", "Optum-EHR")
 mappedOverallResults <- readRDS("data/raw/mappedOverallResults.rds")
 overallNegativeControls <- readRDS("data/raw/mappedOverallResultsNegativeControls.rds")
-plot <- list()
+plots <- list()
 
 for (i in seq_along(databases)) {
   positiveResults <- mappedOverallResults %>%
     filter(
       database == databases[i],
-      analysisType == "itt_att_1095_gl",
-      outcomeId == 101
+      analysisType == analType,
+      outcomeId == stratification
     ) %>%
     mutate(logRr = log(estimate))
-  
+
   negativeControls <- overallNegativeControls %>%
     filter(
       database == databases[i],
-      analysisType == "itt_att_1095_gl",
+      analysisType == analType,
     ) %>%
     mutate(logRr = log(estimate))
-  
+
   null <- fitNull(
     logRr = negativeControls$logRr,
     seLogRr = negativeControls$seLogRr)
-  
-  plot[[i]] <- plotCalibrationEffect(
+
+  plots[[i]] <- plotCalibrationEffect(
     null = null,
     logRrNegatives = negativeControls$logRr,
     seLogRrNegatives = negativeControls$seLogRr,
@@ -49,10 +62,10 @@ for (i in seq_along(databases)) {
       axis.title.x  = element_text(size = 30),
       )
   if (i == 1) {
-    plot[[i]] <- plot[[i]] +
+    plots[[i]] <- plots[[i]] +
       theme(axis.title.y = element_text(size = 30))
   } else {
-    plot[[i]] <- plot[[i]] +
+    plots[[i]] <- plots[[i]] +
       theme(
         axis.title.y = element_blank()
       )
@@ -61,20 +74,28 @@ for (i in seq_along(databases)) {
 
 # res <- gridExtra::grid.arrange(plot[[1]], plot[[2]], plot[[3]], nrow = 1)
 res <- cowplot::plot_grid(
-                  plot[[1]],
-                  plot[[2]],
-                  plot[[3]],
-                  plot[[4]],
+                  plots[[1]],
+                  plots[[2]],
+                  plots[[3]],
+                  plots[[4]],
                   nrow = 1
                 ) +
   cowplot::draw_label("Relative risk", x = .5, y = 0, vjust = -.5, size = 30)
 
+fileName <- paste0(
+  paste(
+    "overallNcPlot",
+    analType,
+    sep = "_"
+  ),
+  ".tiff"
+)
 ggsave(
-  file.path("figures/OverallNcPlot.tiff"),
+  file.path("figures", fileName),
   plot = res,
-  dpi = 600,
+  dpi = 400,
   width = 700,
   height = 350,
   units = "mm",
-  compression = "lzw"
+  compression = "lzw+p"
 )

@@ -3,7 +3,7 @@
 # Description:
 #   Calculates the negative control-calibrated hazard ratios per database:outcome
 #   combination.
-# Depends: 
+# Depends:
 #   data/raw/mappedOverallResultsNegativeControls.rds
 #   data/raw/mappedOverallResults.rds
 # Output:
@@ -13,16 +13,17 @@ library(tidyverse)
 
 args = commandArgs(trailingOnly = TRUE)
 
-if (args[1] == "att") {
-  analType <- "itt_att_1095_q_25_75"
-} else {
-  analType <- "itt_1095_q_25_75"
-}
+protocol <- args[1]
+estimand <- args[2]
+analysis <- args[3]
+
+analType <- paste(protocol, estimand, analysis, sep = "_")
+
 
 fileName <- paste0(
     paste(
         "calibrateOverallResults",
-        args[1],
+        analType,
         sep = "_"
     ),
     ".rds"
@@ -33,7 +34,7 @@ overallNegativeControls <- readRDS(
 ) %>%
   dplyr::filter(
     analysisType == analType,
-    database %in% args[-1]
+    database %in% args[-(1:3)]
   ) %>%
   dplyr::mutate(logRr = log(estimate))
 

@@ -2,9 +2,9 @@
 
 # ==============================================================================
 # Description:
-#   Calculates the negative control-calibrated hazard ratios per 
+#   Calculates the negative control-calibrated hazard ratios per
 #   database:outcome combination.
-# Depends: 
+# Depends:
 #   data/raw/negativeControls.rds
 #   data/raw/mappedOverallRelativeResults.rds
 # Output:
@@ -15,24 +15,16 @@ library(tidyverse)
 
 args = commandArgs(trailingOnly = TRUE)
 
-if (args[1] == "att") {
-  analType <- c(
-    "itt_att_1095_risk_quarters",
-    "itt_att_1095_q_25_75",
-    "itt_att_1095_gl"
-  )
-} else {
-  analType <- c(
-    "itt_1095_risk_quarters",
-    "itt_1095_q_25_75",
-    "itt_1095_gl"
-  )
-}
+protocol <- args[1]
+estimand <- args[2]
+analysis <- args[3]
+
+analType <- paste(protocol, estimand, analysis, sep = "_")
 
 fileName <- paste0(
   paste(
     "calibrateRiskStratified",
-    args[1],
+    analType,
     sep = "_"
   ),
   ".rds"
@@ -52,7 +44,8 @@ relativeResults <- readRDS(
 ) %>%
   filter(
     analysisType %in% analType,
-    database %in% args[-1]
+    database %in% args[-(1:3)],
+    !(riskStratum == "Q2" & database == "ccae")
   ) %>%
   mutate(
     logRr = log(estimate)
@@ -90,7 +83,7 @@ tibble(relativeResults) %>%
         model   = .x$mod[[1]]
       )
     )
-  ) %>% 
+  ) %>%
   unnest(pp) %>%
   select(-data) %>%
   saveRDS(
