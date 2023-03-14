@@ -20,8 +20,16 @@ analysis <- args[3]
 
 if (analysis == "1095_custom_10") {
   stratification <- 5402
+  riskLevels <- c(
+    "Hip fracture risk below 2.5%",
+    "Hip fracture risk above 2.5%"
+  )
 } else {
   stratification <- 5403
+  riskLevels <- c(
+    "Low major\nosteoporotic fracture risk",
+    "High major\nosteoporotic fracture risk"
+  )
 }
 # stratification <- as.numeric(args[4])
 analType <- paste(protocol, estimand, analysis, sep = "_")
@@ -103,10 +111,7 @@ combined <- rbind(riskStratified, metaRiskStratified) %>%
       riskStratum = factor(
         x = riskStratum,
         levels = c("Q1", "Q2"),
-        labels = c(
-          "Hip fracture risk below 2.5%",
-          "Hip fracture risk above 2.5%"
-        )
+        labels = riskLevels
       )
     ) %>%
   left_join(map_outcomes, by = c("outcome" = "outcome_id"))
@@ -143,10 +148,7 @@ annotationTeriparatide <- data.frame(
   riskStratum = factor(
     "Q2",
     levels = c("Q1", "Q2"),
-    labels = c(
-      "Hip fracture risk below 2.5%",
-      "Hip fracture risk above 2.5%"
-    )
+    labels = riskLevels
   )
 )
 
@@ -160,10 +162,7 @@ annotationBisphposphonates <- data.frame(
   riskStratum = factor(
     "Q2",
     levels = c("Q1", "Q2"),
-    labels = c(
-      "Hip fracture risk below 2.5%",
-      "Hip fracture risk above 2.5%"
-    )
+    labels = riskLevels
   )
 )
 

@@ -1,7 +1,9 @@
 # =============================================================================================================================
-# - On treatment analyses
-# - Risk strata: hip fracture
+# ON TREATMENT ANALYSES
 # =============================================================================================================================
+# -----------------------------------------------------------------------------------------------------------------------------
+# Stratification on hip fracture risk
+# -----------------------------------------------------------------------------------------------------------------------------
 data/processed/calibrateOverallResults_on_treatment_att_1095_custom_10.rds: code/calibrateOverall.R\
 	data/raw/mappedOverallResultsNegativeControls.rds\
 	data/raw/mappedOverallResults.rds
@@ -31,11 +33,11 @@ figures/plotMetaRiskStratified_on_treatment_att_1095_custom_10.tiff : code/plotM
 	data/processed/metaCalibrateRiskStratified_on_treatment_att_1095_custom_10.rds
 	$< on_treatment att 1095_custom_10
 
-figures/plotAbsoluteRiskStratified_on_treatment_att_1095_10.tiff : code/plotAbsoluteRiskStratified.R\
+figures/plotAbsoluteRiskStratified_on_treatment_att_1095_custom_10.tiff : code/plotAbsoluteRiskStratified.R\
 	data/raw/mappedOverallAbsoluteResults.rds\
 	data/raw/map_outcomes.rds\
 	data/raw/map_exposures.rds
-	$< on_treatment att 1095_custom_10
+	$< on_treatment att 1095_custom_10 tiff
 
 figures/overallNcPlot_on_treatment_att_1095_custom_10.tiff : code/PlotNegativeControls.R\
 	data/raw/mappedOverallResultsNegativeControls.rds\
@@ -48,29 +50,60 @@ figures/overallCovariateBalance_on_treatment_att_1095_custom_10.tiff : code/Plot
 figures/overallPsDensity_on_treatment_att_1095_custom_10.tiff : code/PlotPsDensity.R
 	$< on_treatment att 1095_custom_10
 
+# -----------------------------------------------------------------------------------------------------------------------------
+# Stratification on major osteoporotic fracture risk
+# -----------------------------------------------------------------------------------------------------------------------------
+data/processed/calibrateOverallResults_on_treatment_att_1095_gl.rds: code/calibrateOverall.R\
+	data/raw/mappedOverallResultsNegativeControls.rds\
+	data/raw/mappedOverallResults.rds
+	$< on_treatment att 1095_gl ccae optum_ehr optum_extended_dod mdcr
+
+data/processed/metaCalibrateOverall_on_treatment_att_1095_gl.rds : code/metaCalibrateOverall.R\
+	data/processed/calibrateOverallResults_on_treatment_att_1095_gl.rds
+	$< on_treatment att 1095_gl
+
+figures/plotMetaOverall_on_treatment_att.tiff : code/plotMetaOverall.R \
+	data/processed/calibrateOverallResults_on_treatment_att_1095_gl.rds\
+	data/processed/metaCalibrateOverall_on_treatment_att_1095_gl.rds 
+	$< on_treatment att 1095_gl
+
+data/processed/calibrateRiskStratified_on_treatment_att_1095_gl.rds : code/calibrateRiskStratified.R\
+	data/raw/negativeControls.rds\
+	data/raw/mappedOverallRelativeResults.rds
+	$< on_treatment att 1095_gl ccae optum_ehr optum_extended_dod mdcr
+
+data/processed/metaCalibrateRiskStratified_on_treatment_att_1095_gl.rds : code/metaCalibrateRiskStratified.R\
+	data/processed/calibrateRiskStratified_on_treatment_att_1095_gl.rds
+	$< on_treatment att 1095_gl
+
+figures/plotMetaRiskStratified_on_treatment_att_1095_gl.tiff : code/plotMetaRiskStratified.R\
+	data/raw/map_outcomes.rds\
+	data/processed/calibrateRiskStratified_on_treatment_att_1095_gl.rds\
+	data/processed/metaCalibrateRiskStratified_on_treatment_att_1095_gl.rds
+	$< on_treatment att 1095_gl
+
+figures/plotAbsoluteRiskStratified_on_treatment_att_1095_gl.tiff : code/plotAbsoluteRiskStratified.R\
+	data/raw/mappedOverallAbsoluteResults.rds\
+	data/raw/map_outcomes.rds\
+	data/raw/map_exposures.rds
+	$< on_treatment att 1095_gl tiff
+
+figures/overallNcPlot_on_treatment_att_1095_gl.tiff : code/PlotNegativeControls.R\
+	data/raw/mappedOverallResultsNegativeControls.rds\
+	data/raw/mappedOverallResults.rds
+	$< on_treatment att 1095_gl
+
+figures/overallCovariateBalance_on_treatment_att_1095_gl.tiff : code/PlotCovariateBalance.R
+	$< on_treatment att 1095_gl
+
+figures/overallPsDensity_on_treatment_att_1095_gl.tiff : code/PlotPsDensity.R
+	$< on_treatment att 1095_gl
 
 
 
-
-
-
-
-figures/PsDensityRiskStratifed_att_q_25_75.tiff : code/PlotPsRiskStratified.R
-	$< q_25_75 att 5402 5402 tiff
-
-figures/PsDensityRiskStratifed_att_gl.tiff : code/PlotPsRiskStratified.R
-	$< gl att 5402 5402 tiff
-
-figures/plotAbsoluteHip.tiff : code/plotAbsoluteHip.R\
-	data/processed/mappedOverallAbsoluteResults.rds
-	$<
-
-figures/CombinedAbsolute_age_50_tr_1_gl.tiff : code/CombinedPlots.R
-	$< age_50_tr_1_gl major_osteoporotic_fracture
-
-figures/CombinedAbsolute_age_50_tr_1_q_25_75.tiff : code/CombinedPlots.R
-	$< age_50_tr_1_q_25_75 major_osteoporotic_fracture
-
+# =============================================================================================================================
+# RENDER MANUSCRIPT
+# =============================================================================================================================
 submission/manuscript.pdf : submission/manuscript.rmd\
 	submission/references.bib\
 	submission/jamia.csl\
