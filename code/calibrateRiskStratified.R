@@ -11,13 +11,22 @@
 #   data/processed/calibrateRiskStratified.rds
 # ==============================================================================
 
-library(tidyverse)
+suppressPackageStartupMessages({
+  library(tidyverse)
+})
 
 args = commandArgs(trailingOnly = TRUE)
 
 protocol <- args[1]
 estimand <- args[2]
 analysis <- args[3]
+
+message(rep("=", 80))
+message(crayon::bold("SETTINGS"))
+message(paste0("args_protocol:  ", protocol))
+message(paste0("args_estimand:  ", estimand))
+message(paste0("args_analysis:  ", analysis))
+message(rep("=", 80))
 
 analType <- paste(protocol, estimand, analysis, sep = "_")
 
@@ -44,14 +53,16 @@ relativeResults <- readRDS(
 ) %>%
   filter(
     analysisType %in% analType,
-    database %in% args[-(1:3)],
-    !(riskStratum == "Q2" & database == "ccae")
-  ) %>%
-  mutate(
-    logRr = log(estimate)
+    database %in% args[-(1:3)]
   )
 
+if (analysis == "1095_custom") {
+  negativeControls <- negativeControls %>%
+    filter(!(riskStratum == "Q2" & database == "ccae"))
+}
 
+negativeControls <- negativeControls %>%
+  mutate(logRr = log(estimate))
 
 systErrorModels <- negativeControls %>%
   filter(!is.na(seLogRr)) %>%
@@ -92,3 +103,13 @@ tibble(relativeResults) %>%
       fileName
     )
   )
+
+message(
+  crayon::green(
+    paste(
+      "\u2713 File saved at:",
+      file.path("data/processed", fileName),
+      "\n"
+    )
+  )
+)

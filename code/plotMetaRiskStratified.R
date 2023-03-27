@@ -277,6 +277,8 @@ message(
   crayon::green(
     paste(
       "\u2713 Figure saved at:",
-      file.path("figures", fileName))
+      file.path("figures", fileName),
+      "\n"
+    )
   )
 )
