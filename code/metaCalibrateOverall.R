@@ -8,13 +8,22 @@
 # Output:
 #     data/processed/calibrateMetaOverall.rds
 
-library(tidyverse)
+suppressPackageStartupMessages({
+  library(tidyverse)
+})
 
 args = commandArgs(trailingOnly = TRUE)
 
 protocol <- args[1]
 estimand <- args[2]
 analysis <- args[3]
+
+message(rep("=", 80))
+message(crayon::bold("SETTINGS"))
+message(paste0("args_protocol:  ", protocol))
+message(paste0("args_estimand:  ", estimand))
+message(paste0("args_analysis:  ", analysis))
+message(rep("=", 80))
 
 analType <- paste(protocol, estimand, analysis, sep = "_")
 
@@ -72,3 +81,16 @@ calibrateOverallResults %>%
       fileName
     )
   )
+
+message(
+  crayon::green(
+    paste(
+      "\u2713 File saved at:",
+      file.path(
+        "data/processed",
+        fileName
+      ),
+      "\n"
+    )
+  )
+)

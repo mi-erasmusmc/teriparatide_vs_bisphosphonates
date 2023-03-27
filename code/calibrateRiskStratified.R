@@ -35,7 +35,7 @@ negativeControls <- readRDS(
 ) %>%
   dplyr::filter(
     analysisType %in% analType,
-    database %in% args[-1]
+    database %in% args
   ) %>%
   dplyr::mutate(logRr = log(estimate))
 

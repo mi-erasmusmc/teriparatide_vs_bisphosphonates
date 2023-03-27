@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
-library(tidyverse)
+suppressPackageStartupMessages({
+  library(tidyverse)
+})
 
 databases <- c("ccae", "mdcr", "optum_extended_dod", "optum_ehr")
 databaseLabels <- c("CCAE", "MDCR", "Optum-DOD", "Optum-EHR")
@@ -10,7 +12,15 @@ protocol <- args[1]
 estimand <- args[2]
 analysis <- args[3]
 
-if (analysis == "1095_custom_10") {
+message(rep("=", 80))
+message(crayon::bold("SETTINGS"))
+message(paste0("args_protocol:  ", protocol))
+message(paste0("args_estimand:  ", estimand))
+message(paste0("args_analysis:  ", analysis))
+message(rep("=", 80))
+
+
+if (analysis == "1095_custom") {
   stratification <- 5402
 } else {
   stratification <- 5403
@@ -60,17 +70,17 @@ p <- lapply(databases, loadBalance, stratification) %>%
   xlab("Before matching") +
   ylab("After matching") +
   theme(
-    legend.position  = "none",
-    axis.title       = element_text(size = 8.5),
-    axis.text        = element_text(size = 6),
-    axis.ticks.y     = element_blank(),
-    strip.background = element_blank(),
-    plot.background  = element_rect(fill = "#F1F3F8"),
+    legend.position   = "none",
+    axis.title        = element_text(size = 8.5),
+    axis.text         = element_text(size = 6),
+    axis.ticks.y      = element_blank(),
+    strip.background  = element_blank(),
+    plot.background   = element_rect(fill = "#F1F3F8"),
     panel.background  = element_rect(fill = "#D6E0F0"),
-    axis.line        = element_line(color = "black"),
-    strip.text       = element_text(size = 8.5),
-    panel.grid.minor = element_blank(),
-    panel.spacing    = unit(4.5, "mm")
+    axis.line         = element_line(color = "black"),
+    strip.text        = element_text(size = 8.5),
+    panel.grid.minor  = element_blank(),
+    panel.spacing     = unit(4.5, "mm")
   )
 
 fileName <- paste0(
@@ -88,4 +98,14 @@ ggsave(
   width = 8,
   compression = "lzw+p",
   dpi = 1000
+)
+
+message(
+  crayon::green(
+    paste(
+      "\u2713 Figure saved at:",
+      file.path("figures", fileName),
+      "\n"
+    )
+  )
 )

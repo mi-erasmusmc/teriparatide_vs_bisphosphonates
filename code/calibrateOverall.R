@@ -9,13 +9,24 @@
 # Output:
 #   data/processed/calibrateOverallResults.rds
 
-library(tidyverse)
+suppressPackageStartupMessages({
+  library(tidyverse)
+})
+
 
 args = commandArgs(trailingOnly = TRUE)
 
 protocol <- args[1]
 estimand <- args[2]
 analysis <- args[3]
+
+message(rep("=", 80))
+message(crayon::bold("SETTINGS"))
+message(paste0("args_protocol:   ", protocol))
+message(paste0("args_estimand:   ", estimand))
+message(paste0("args_analysis:   ", analysis))
+message(paste0("args_databases:  ", paste(args[-(1:3)], sep = ", ", collapse = ", ")))
+message(rep("=", 80))
 
 analType <- paste(protocol, estimand, analysis, sep = "_")
 
@@ -43,7 +54,7 @@ overallMappedOverallRelativeResults <- readRDS(
 ) %>%
   dplyr::filter(
     analysisType == analType,
-    database %in% args[-1]
+    database %in% args[-(1:3)]
   ) %>%
   mutate(logRr = log(estimate))
 
@@ -80,3 +91,16 @@ overallMappedOverallRelativeResults %>%
       fileName
     )
   )
+
+message(
+  crayon::green(
+    paste(
+      "\u2713 File saved at:",
+      file.path(
+        "data/processed",
+        fileName
+      ),
+      "\n"
+    )
+  )
+)

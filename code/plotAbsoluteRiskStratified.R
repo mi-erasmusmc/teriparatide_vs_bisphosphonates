@@ -1,7 +1,9 @@
 #!/usr/bin/env Rscript
 
-library(tidyverse)
-library(scales)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(scales)
+})
 
 args <- commandArgs(trailingOnly = TRUE)
 protocol <- args[1]
@@ -9,7 +11,15 @@ estimand <- args[2]
 analysis <- args[3]
 fileType <- args[4]
 
-if (analysis == "1095_custom_10") {
+message(rep("=", 80))
+message(crayon::bold("SETTINGS"))
+message(paste0("args_protocol:  ", protocol))
+message(paste0("args_estimand:  ", estimand))
+message(paste0("args_analysis:  ", analysis))
+message(paste0("args_fileType:  ", fileType))
+message(rep("=", 80))
+
+if (analysis == "1095_custom") {
   stratification <- 5402
   xAxisLabel <- "hip fracture"
   riskLevels <- c("Below 2.5%", "Above 2.5%")
@@ -194,3 +204,13 @@ if (fileType == "tiff") {
     units       = "mm"
   )
 }
+
+message(
+  crayon::green(
+    paste(
+      "\u2713 Figure saved at:",
+      file.path("figures", fileName),
+      "\n"
+    )
+  )
+)

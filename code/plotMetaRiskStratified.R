@@ -10,15 +10,24 @@
 # Output:
 #   figures/plotMetaRiskStratifed_xxx.pdf
 
-library(tidyverse)
-library(scales)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(scales)
+})
 
 args = commandArgs(trailingOnly = TRUE)
 protocol <- args[1]
 estimand <- args[2]
 analysis <- args[3]
 
-if (analysis == "1095_custom_10") {
+message(rep("=", 80))
+message(crayon::bold("SETTINGS"))
+message(paste0("args_protocol:  ", protocol))
+message(paste0("args_estimand:  ", estimand))
+message(paste0("args_analysis:  ", analysis))
+message(rep("=", 80))
+
+if (analysis == "1095_custom") {
   stratification <- 5402
   riskLevels <- c(
     "Hip fracture risk below 2.5%",
@@ -262,4 +271,12 @@ ggsave(
   width = 7,
   compression = "lzw+p",
   dpi = 1000
+)
+
+message(
+  crayon::green(
+    paste(
+      "\u2713 Figure saved at:",
+      file.path("figures", fileName))
+  )
 )
