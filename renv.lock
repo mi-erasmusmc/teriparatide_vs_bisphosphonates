@@ -9,65 +9,6 @@
     ]
   },
   "Packages": {
-    "Andromeda": {
-      "Package": "Andromeda",
-      "Version": "0.6.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "ae741b16de25b2ab0a87b9f38e159282",
-      "Requirements": [
-        "DBI",
-        "RSQLite",
-        "cli",
-        "dbplyr",
-        "dplyr",
-        "hms",
-        "pillar",
-        "rlang",
-        "tidyselect",
-        "zip"
-      ]
-    },
-    "BH": {
-      "Package": "BH",
-      "Version": "1.78.0-0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "4e348572ffcaa2fb1e610e7a941f6f3a",
-      "Requirements": []
-    },
-    "CohortMethod": {
-      "Package": "CohortMethod",
-      "Version": "4.2.3",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteUsername": "ohdsi",
-      "RemoteRepo": "CohortMethod",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "391b499c9e162f9cbc7c273baeb17c9eb2fdf4a4",
-      "RemoteHost": "api.github.com",
-      "Remotes": "ohdsi/FeatureExtraction, ohdsi/Eunomia",
-      "Hash": "14ad576da31c3cd4bca2925e73cbb35d",
-      "Requirements": [
-        "Andromeda",
-        "Cyclops",
-        "DatabaseConnector",
-        "FeatureExtraction",
-        "ParallelLogger",
-        "Rcpp",
-        "SqlRender",
-        "bit64",
-        "cli",
-        "dplyr",
-        "ggplot2",
-        "gridExtra",
-        "pillar",
-        "plyr",
-        "readr",
-        "rlang",
-        "survival"
-      ]
-    },
     "CompQuadForm": {
       "Package": "CompQuadForm",
       "Version": "1.4.3",
@@ -76,24 +17,6 @@
       "Hash": "4594a396b693b8705d8dbb5491aca887",
       "Requirements": []
     },
-    "Cyclops": {
-      "Package": "Cyclops",
-      "Version": "3.2.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "319ed4c34c5b150ebba5e0faadc53847",
-      "Requirements": [
-        "Andromeda",
-        "BH",
-        "Matrix",
-        "Rcpp",
-        "RcppEigen",
-        "bit64",
-        "dplyr",
-        "rlang",
-        "survival"
-      ]
-    },
     "DBI": {
       "Package": "DBI",
       "Version": "1.1.3",
@@ -101,23 +24,6 @@
       "Repository": "CRAN",
       "Hash": "b2866e62bab9378c3cc9476a1954226b",
       "Requirements": []
-    },
-    "DatabaseConnector": {
-      "Package": "DatabaseConnector",
-      "Version": "5.1.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "7efe1532a5256de9dd7f2f8d90b4e6da",
-      "Requirements": [
-        "DBI",
-        "SqlRender",
-        "bit64",
-        "rJava",
-        "readr",
-        "rlang",
-        "stringr",
-        "urltools"
-      ]
     },
     "EmpiricalCalibration": {
       "Package": "EmpiricalCalibration",
@@ -134,34 +40,6 @@
         "Rcpp",
         "ggplot2",
         "gridExtra",
-        "rlang"
-      ]
-    },
-    "FeatureExtraction": {
-      "Package": "FeatureExtraction",
-      "Version": "3.2.0",
-      "Source": "GitHub",
-      "Remotes": "ohdsi/Eunomia",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "FeatureExtraction",
-      "RemoteUsername": "ohdsi",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "5363f5f4cdaf8b31ce9f193861169047b11ea41c",
-      "Hash": "2e6f81230989e15003feaf3dad0628ee",
-      "Requirements": [
-        "Andromeda",
-        "DBI",
-        "DatabaseConnector",
-        "ParallelLogger",
-        "RSQLite",
-        "SqlRender",
-        "cli",
-        "dplyr",
-        "jsonlite",
-        "pillar",
-        "rJava",
-        "readr",
         "rlang"
       ]
     },
@@ -183,23 +61,6 @@
         "lattice"
       ]
     },
-    "ParallelLogger": {
-      "Package": "ParallelLogger",
-      "Version": "3.0.1",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteUsername": "ohdsi",
-      "RemoteRepo": "ParallelLogger",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "eb32f7a65f6eb3080d63afa193aa9b585e51c768",
-      "RemoteHost": "api.github.com",
-      "Hash": "aa54f6b05b7153fe63dd25ee9dd4e0be",
-      "Requirements": [
-        "jsonlite",
-        "snow",
-        "xml2"
-      ]
-    },
     "R6": {
       "Package": "R6",
       "Version": "2.5.1",
@@ -215,22 +76,6 @@
       "Repository": "CRAN",
       "Hash": "45f0398006e83a5b10b72a90663d8d8c",
       "Requirements": []
-    },
-    "RSQLite": {
-      "Package": "RSQLite",
-      "Version": "2.2.19",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "becd8219ad7056f1dbe2f3517c75c17d",
-      "Requirements": [
-        "DBI",
-        "Rcpp",
-        "bit64",
-        "blob",
-        "memoise",
-        "pkgconfig",
-        "plogr"
-      ]
     },
     "Rcpp": {
       "Package": "Rcpp",
@@ -249,18 +94,6 @@
       "Requirements": [
         "Matrix",
         "Rcpp"
-      ]
-    },
-    "SqlRender": {
-      "Package": "SqlRender",
-      "Version": "1.10.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "ce817a84681549f442cc4b240f2028aa",
-      "Requirements": [
-        "checkmate",
-        "rJava",
-        "rlang"
       ]
     },
     "askpass": {
@@ -425,16 +258,6 @@
       "Requirements": [
         "rematch",
         "tibble"
-      ]
-    },
-    "checkmate": {
-      "Package": "checkmate",
-      "Version": "2.1.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "147e4db6909d8814bb30f671b49d7e06",
-      "Requirements": [
-        "backports"
       ]
     },
     "cli": {
@@ -692,6 +515,22 @@
       "Hash": "15e9634c0fcd294799e9b2e929ed1b86",
       "Requirements": []
     },
+    "ggh4x": {
+      "Package": "ggh4x",
+      "Version": "0.2.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "12a9567dfa0194970dde0a3089bd7efe",
+      "Requirements": [
+        "cli",
+        "ggplot2",
+        "gtable",
+        "lifecycle",
+        "rlang",
+        "scales",
+        "vctrs"
+      ]
+    },
     "ggplot2": {
       "Package": "ggplot2",
       "Version": "3.4.0",
@@ -711,20 +550,6 @@
         "tibble",
         "vctrs",
         "withr"
-      ]
-    },
-    "ggthemes": {
-      "Package": "ggthemes",
-      "Version": "4.2.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "617fb2c300f68e8b1ba21043fba88fd7",
-      "Requirements": [
-        "ggplot2",
-        "purrr",
-        "scales",
-        "stringr",
-        "tibble"
       ]
     },
     "glue": {
@@ -1209,24 +1034,6 @@
         "withr"
       ]
     },
-    "plogr": {
-      "Package": "plogr",
-      "Version": "0.2.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "09eb987710984fc2905c7129c7d85e65",
-      "Requirements": []
-    },
-    "plyr": {
-      "Package": "plyr",
-      "Version": "1.8.8",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "d744387aef9047b0b48be2933d78e862",
-      "Requirements": [
-        "Rcpp"
-      ]
-    },
     "praise": {
       "Package": "praise",
       "Version": "1.0.0",
@@ -1285,14 +1092,6 @@
         "magrittr",
         "rlang"
       ]
-    },
-    "rJava": {
-      "Package": "rJava",
-      "Version": "1.0-6",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "0415819f6baa75d86d52483f7292b623",
-      "Requirements": []
     },
     "rappdirs": {
       "Package": "rappdirs",
@@ -1493,14 +1292,6 @@
         "stringr"
       ]
     },
-    "snow": {
-      "Package": "snow",
-      "Version": "0.4-4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "40b74690debd20c57d93d8c246b305d4",
-      "Requirements": []
-    },
     "stringi": {
       "Package": "stringi",
       "Version": "1.7.8",
@@ -1519,16 +1310,6 @@
         "glue",
         "magrittr",
         "stringi"
-      ]
-    },
-    "survival": {
-      "Package": "survival",
-      "Version": "3.4-0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "04411ae66ab4659230c067c32966fc20",
-      "Requirements": [
-        "Matrix"
       ]
     },
     "svglite": {
@@ -1704,16 +1485,6 @@
         "xfun"
       ]
     },
-    "triebeard": {
-      "Package": "triebeard",
-      "Version": "0.3.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "847a9d113b78baca4a9a8639609ea228",
-      "Requirements": [
-        "Rcpp"
-      ]
-    },
     "tzdb": {
       "Package": "tzdb",
       "Version": "0.3.0",
@@ -1722,17 +1493,6 @@
       "Hash": "b2e1cbce7c903eaf23ec05c58e59fb5e",
       "Requirements": [
         "cpp11"
-      ]
-    },
-    "urltools": {
-      "Package": "urltools",
-      "Version": "1.7.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "e86a704261a105f4703f653e05defa3e",
-      "Requirements": [
-        "Rcpp",
-        "triebeard"
       ]
     },
     "utf8": {
@@ -1853,14 +1613,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "9b570515751dcbae610f29885e025b41",
-      "Requirements": []
-    },
-    "zip": {
-      "Package": "zip",
-      "Version": "2.2.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "c42bfcec3fa6a0cce17ce1f8bc684f88",
       "Requirements": []
     }
   }
