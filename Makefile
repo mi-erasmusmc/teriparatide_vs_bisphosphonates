@@ -1,7 +1,53 @@
 # ======================================================================================================
 # Stratification on hip fracture risk
 # ======================================================================================================
-#
+
+data/raw/mappedOverallResultsNegativeControls.rds : code/getRawData.R
+	$< mappedOverallResultsNegativeControls.rds
+
+data/raw/mappedOverallResults.rds : code/getRawData.R
+	$< mappedOverallResults.rds
+
+data/raw/mappedOverallAbsoluteResults.rds : code/getRawData.R
+	$< mappedOverallAbsoluteResults.rds
+
+data/raw/negativeControls.rds : code/getRawData.R
+	$< negativeControls.rds
+
+data/raw/mappedOverallRelativeResults.rds : code/getRawData.R
+	$< mappedOverallRelativeResults.rds
+
+data/raw/map_outcomes.rds : code/getRawData.R
+	$< map_outcomes.rds
+
+data/raw/map_exosures.rds : code/getRawData.R
+	$< map_exposures.rds
+
+
+data/raw/overall_balance_ccae_itt_ccae_itt_att_1095_custom_6889_6888_5402.rds : code/getRawData.R
+	$< overall_balance_ccae_itt_ccae_itt_att_1095_custom_6889_6888_5402.rds
+
+data/raw/overall_balance_mdcr_itt_mdcr_itt_att_1095_custom_6889_6888_5402.rds : code/getRawData.R
+	$< overall_balance_mdcr_itt_mdcr_itt_att_1095_custom_6889_6888_5402.rds
+
+data/raw/overall_balance_optum_ehr_itt_optum_ehr_itt_att_1095_custom_6889_6888_5402.rds : code/getRawData.R
+	$< overall_balance_optum_ehr_itt_optum_ehr_itt_att_1095_custom_6889_6888_5402.rds
+
+data/raw/overall_balance_optum_extended_dod_itt_optum_extended_dod_itt_att_1095_custom_6889_6888_5402.rds : code/getRawData.R
+	$< overall_balance_optum_extended_dod_itt_optum_extended_dod_itt_att_1095_custom_6889_6888_5402.rds
+
+data/raw/overall_psDensity_ccae_itt_ccae_itt_att_1095_custom_6889_6888_5402.rds : code/getRawData.R
+	$< overall_psDensity_ccae_itt_ccae_itt_att_1095_custom_6889_6888_5402.rds
+
+data/raw/overall_psDensity_mdcr_itt_mdcr_itt_att_1095_custom_6889_6888_5402.rds : code/getRawData.R
+	$< overall_psDensity_mdcr_itt_mdcr_itt_att_1095_custom_6889_6888_5402.rds
+
+data/raw/overall_psDensity_optum_ehr_itt_optum_ehr_itt_att_1095_custom_6889_6888_5402.rds : code/getRawData.R
+	$< overall_psDensity_optum_ehr_itt_optum_ehr_itt_att_1095_custom_6889_6888_5402.rds
+
+data/raw/overall_psDensity_optum_extended_dod_itt_optum_extended_dod_itt_att_1095_custom_6889_6888_5402.rds : code/getRawData.R
+	$< overall_psDensity_optum_extended_dod_itt_optum_extended_dod_itt_att_1095_custom_6889_6888_5402.rds
+
 data/processed/calibrateOverallResults_itt_att_1095_custom.rds: code/calibrateOverall.R\
 	data/raw/mappedOverallResultsNegativeControls.rds\
 	data/raw/mappedOverallResults.rds
@@ -42,10 +88,18 @@ figures/overallNcPlot_itt_att_1095_custom.tiff : code/PlotNegativeControls.R\
 	data/raw/mappedOverallResults.rds
 	$< itt att 1095_custom
 
-figures/overallCovariateBalance_itt_att_1095_custom.tiff : code/PlotCovariateBalance.R
+figures/overallCovariateBalance_itt_att_1095_custom.tiff : code/PlotCovariateBalance.R\
+	data/raw/overall_balance_ccae_itt_ccae_itt_att_1095_custom_6889_6888_5402.rds\
+	data/raw/overall_balance_mdcr_itt_mdcr_itt_att_1095_custom_6889_6888_5402.rds\
+	data/raw/overall_balance_optum_ehr_itt_optum_ehr_itt_att_1095_custom_6889_6888_5402.rds\
+	data/raw/overall_balance_optum_extended_dod_itt_optum_extended_dod_itt_att_1095_custom_6889_6888_5402.rds
 	$< itt att 1095_custom
 
-figures/overallPsDensity_itt_att_1095_custom.tiff : code/PlotPsDensity.R
+figures/overallPsDensity_itt_att_1095_custom.tiff : code/PlotPsDensity.R\
+	data/raw/overall_psDensity_ccae_itt_ccae_itt_att_1095_custom_6889_6888_5402.rds\
+	data/raw/overall_psDensity_mdcr_itt_mdcr_itt_att_1095_custom_6889_6888_5402.rds\
+	data/raw/overall_psDensity_optum_ehr_itt_optum_ehr_itt_att_1095_custom_6889_6888_5402.rds\
+	data/raw/overall_psDensity_optum_extended_dod_itt_optum_extended_dod_itt_att_1095_custom_6889_6888_5402.rds
 	$< itt att 1095_custom
 
 
