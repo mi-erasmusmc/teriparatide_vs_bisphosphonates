@@ -22,7 +22,7 @@ message(rep("=", 80))
 if (analysis == "1095_custom") {
   stratification <- 5402
   xAxisLabel <- "hip fracture"
-  riskLevels <- c("Below 2.5%", "Above 2.5%")
+  riskLevels <- c("Below 3%", "Above 3%")
 } else {
   stratification <- 5403
   xAxisLabel <- "major osteoporotic fracture"

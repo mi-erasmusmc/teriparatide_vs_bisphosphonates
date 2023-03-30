@@ -30,8 +30,8 @@ message(rep("=", 80))
 if (analysis == "1095_custom") {
   stratification <- 5402
   riskLevels <- c(
-    "Hip fracture risk below 2.5%",
-    "Hip fracture risk above 2.5%"
+    "Hip fracture risk below 3%",
+    "Hip fracture risk above 3%"
   )
 } else {
   stratification <- 5403

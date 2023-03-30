@@ -2,6 +2,10 @@
 # Stratification on hip fracture risk
 # ======================================================================================================
 
+
+# ------------------------------------------------------------------------------------------------------
+# Fetch data
+# ------------------------------------------------------------------------------------------------------
 data/raw/mappedOverallResultsNegativeControls.rds : code/getRawData.R
 	$< mappedOverallResultsNegativeControls.rds
 
@@ -20,7 +24,7 @@ data/raw/mappedOverallRelativeResults.rds : code/getRawData.R
 data/raw/map_outcomes.rds : code/getRawData.R
 	$< map_outcomes.rds
 
-data/raw/map_exosures.rds : code/getRawData.R
+data/raw/map_exposures.rds : code/getRawData.R
 	$< map_exposures.rds
 
 
@@ -48,6 +52,9 @@ data/raw/overall_psDensity_optum_ehr_itt_optum_ehr_itt_att_1095_custom_6889_6888
 data/raw/overall_psDensity_optum_extended_dod_itt_optum_extended_dod_itt_att_1095_custom_6889_6888_5402.rds : code/getRawData.R
 	$< overall_psDensity_optum_extended_dod_itt_optum_extended_dod_itt_att_1095_custom_6889_6888_5402.rds
 
+# ------------------------------------------------------------------------------------------------------
+# Generate processed data
+# ------------------------------------------------------------------------------------------------------
 data/processed/calibrateOverallResults_itt_att_1095_custom.rds: code/calibrateOverall.R\
 	data/raw/mappedOverallResultsNegativeControls.rds\
 	data/raw/mappedOverallResults.rds
@@ -57,6 +64,9 @@ data/processed/metaCalibrateOverall_itt_att_1095_custom.rds : code/metaCalibrate
 	data/processed/calibrateOverallResults_itt_att_1095_custom.rds
 	$< itt att 1095_custom
 
+# ------------------------------------------------------------------------------------------------------
+# Generate manuscript figures
+# ------------------------------------------------------------------------------------------------------
 figures/plotMetaOverall_itt_att.tiff : code/plotMetaOverall.R \
 	data/processed/calibrateOverallResults_itt_att_1095_custom.rds\
 	data/processed/metaCalibrateOverall_itt_att_1095_custom.rds 
