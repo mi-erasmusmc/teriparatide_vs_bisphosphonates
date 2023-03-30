@@ -1,0 +1,41 @@
+"",Before matching,"","",After matching,"",""
+,Target,Comparator,,Target,Comparator,
+Characteristic,%,%,Std. diff,%,%,Std. diff
+Gender: female,100.0,100.0,0.00,100.0,100.0, 0.00
+Medical history: General,   ,   ,  ,   ,   ,   
+  Acute respiratory disease,  0.0,  0.0,0.00,  0.0,  0.0,-0.01
+  Attention deficit hyperactivity disorder,  0.8,  0.3,0.07,  0.8,  0.9,-0.01
+  Chronic obstructive lung disease, 22.6, 15.3,0.19, 22.0, 23.2,-0.03
+  Crohn's disease,  1.4,  0.6,0.08,  1.3,  1.4,-0.01
+  Depressive disorder, 21.8, 11.5,0.28, 20.4, 22.1,-0.04
+  Diabetes mellitus,  0.3,  0.3,0.01,  0.3,  0.4,-0.02
+  Gastroesophageal reflux disease, 33.2, 17.6,0.36, 31.0, 32.9,-0.04
+  Gastrointestinal hemorrhage,  6.0,  3.0,0.14,  5.6,  5.7,-0.01
+  Human immunodeficiency virus infection,  0.2,  0.1,0.02,  0.2,  0.2, 0.01
+  Hyperlipidemia, 56.2, 53.0,0.06, 54.4, 55.7,-0.03
+  Hypertensive disorder,   ,  0.0,  ,   ,  0.0,   
+  Obesity, 11.3,  9.1,0.07, 11.5, 12.3,-0.02
+  Osteoarthritis, 30.6, 20.5,0.23, 29.0, 30.1,-0.02
+  Pneumonia,  4.5,  2.9,0.08,  4.5,  4.9,-0.02
+  Psoriasis,  2.8,  1.7,0.07,  2.6,  2.8,-0.02
+  Rheumatoid arthritis, 13.7,  6.5,0.24, 13.0, 13.5,-0.01
+  Schizophrenia,  0.3,  0.3,0.00,  0.3,  0.3, 0.00
+  Substance abuse,   ,  0.0,  ,   ,  0.0,   
+  Ulcerative colitis,  1.8,  0.8,0.09,  1.7,  1.6, 0.01
+  Urinary tract infectious disease, 41.1, 27.6,0.29, 39.0, 40.9,-0.04
+  Viral hepatitis C,  1.1,  0.5,0.06,  1.1,  1.1, 0.00
+Medical history: Cardiovascular disease,   ,   ,  ,   ,   ,   
+  Atrial fibrillation, 10.2,  7.0,0.11,  9.5, 10.1,-0.02
+  Cerebrovascular disease,  5.4,  3.4,0.10,  5.0,  5.3,-0.01
+  Coronary arteriosclerosis, 11.0,  6.6,0.16, 10.2, 10.7,-0.02
+  Heart disease,  4.6,  2.6,0.11,  4.3,  4.4,-0.01
+  Heart failure,  4.8,  3.1,0.09,  4.9,  5.3,-0.02
+  Ischemic heart disease,  0.4,  0.3,0.03,  0.4,  0.4,-0.01
+  Pulmonary embolism,  1.0,  0.6,0.04,  1.0,  1.1,-0.01
+  Venous thrombosis,  1.4,  0.7,0.07,  1.2,  1.4,-0.01
+Medical history: Neoplasms,   ,   ,  ,   ,   ,   
+  Malignant lymphoma,  0.3,  0.3,0.00,  0.3,  0.5,-0.03
+  Malignant neoplastic disease,  0.4,  0.3,0.02,  0.3,  0.5,-0.02
+  Malignant tumor of breast,   ,  0.0,  ,   ,   ,   
+  Malignant tumor of colon,   ,  0.0,  ,   ,  0.0,   
+  Primary malignant neoplasm of prostate,  0.0,  0.0,0.01,  0.0,  0.0, 0.00
