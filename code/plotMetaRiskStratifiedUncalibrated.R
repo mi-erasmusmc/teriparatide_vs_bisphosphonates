@@ -1,14 +1,8 @@
 #!/usr/bin/env Rscript
 
 # Description:
-#   Generates the plot regarding the meta-analysis of the calibrated hazard
-#   ratios for the three outcomes
 # Depends:
-#   data/raw/map_outcomes.rds
-#   data/processed/calibrateOverallResults.rds
-#   data/processed/metaCalibrateOverall.rds
 # Output:
-#   figures/plotMetaRiskStratifed_xxx.pdf
 
 suppressPackageStartupMessages({
   library(tidyverse)
@@ -20,12 +14,18 @@ protocol <- args[1]
 estimand <- args[2]
 analysis <- args[3]
 
+analType <- paste(protocol, estimand, analysis, sep = "_")
+
 message(rep("=", 80))
 message(crayon::bold("SETTINGS"))
 message(paste0("args_protocol:  ", protocol))
 message(paste0("args_estimand:  ", estimand))
 message(paste0("args_analysis:  ", analysis))
 message(rep("=", 80))
+
+map_outcomes <- readRDS(
+  "data/raw/map_outcomes.rds"
+)
 
 if (analysis == "1095_custom") {
   stratification <- 5402
@@ -40,77 +40,73 @@ if (analysis == "1095_custom") {
     "High major\nosteoporotic fracture risk"
   )
 }
-# stratification <- as.numeric(args[4])
-analType <- paste(protocol, estimand, analysis, sep = "_")
 
-map_outcomes <- readRDS(
-  "data/raw/map_outcomes.rds"
-)
+suffix <- paste(protocol, estimand, analysis, sep = "_")
 
-calibrateRiskStratified <- readRDS(
-  file.path(
-    "data/processed",
-    paste0(
-      paste(
-        "calibrateRiskStratified",
-        analType,
-        sep = "_"
-      ),
-      ".rds"
-    )
-  )
-) %>%
+relativeResults <- readRDS("data/raw/mappedOverallRelativeResults.rds") %>%
+  mutate(
+    logRr = log(estimate),
+    database = stringr::str_to_lower(database)
+  ) %>%
   filter(
     analysisType == analType,
     stratOutcome == stratification
   ) %>%
   rename("outcome" = "estOutcome")
 
-metaCalibrateRiskStratified <- readRDS(
-  file.path(
-    "data/processed",
-    paste0(
-      paste(
-        "metaCalibrateRiskStratified",
-        analType,
-        sep = "_"
-      ),
-      ".rds"
-    )
-  )
-) %>%
-  filter(
-    analysisType == analType,
-    stratOutcome == stratification
-  ) %>%
-  rename("outcome" = "estOutcome")
-
-riskStratified <- calibrateRiskStratified %>%
-  mutate(
-    hr = exp(logRr),
-    lower    = exp(logLb95Rr),
-    upper    = exp(logUb95Rr)
-  ) %>%
-  select(-contains("Rr")) %>%
-  mutate(
-    type = "single",
-    position = case_when(
-      database == "ccae" ~ 5,
-      database == "mdcr" ~ 4,
-      database == "optum_extended_dod" ~ 3,
-      database == "optum_ehr" ~ 2
-    )
+metaAnalysis <- function(data) {
+  metaRes <- meta::metagen(
+    TE = data$logRr,
+    seTE = data$seLogRr,
+    sm = "HR",
+    method.tau = "PM",
+    studlab = data$database
   )
 
-metaRiskStratified <- metaCalibrateRiskStratified %>%
+  res <- tibble(
+    hr = exp(metaRes$TE.random),
+    lower = exp(metaRes$lower.random),
+    upper = exp(metaRes$upper.random)
+  )
+
+  return(res)
+
+}
+
+metaRelativeResults <- relativeResults %>%
+  group_by(outcome, riskStratum) %>%
+  nest() %>%
+  mutate(
+    ll = map(
+      .x = data,
+      .f = ~metaAnalysis(.x)
+    )
+  ) %>%
+  unnest(cols = ll) %>%
+  select(-data) %>%
   mutate(
     database = "overall",
-    type     = "meta",
+    type = "meta",
     position = 1
-  ) %>%
-  relocate(database, .after = stratOutcome)
+  )
 
-combined <- rbind(riskStratified, metaRiskStratified) %>%
+combined <- bind_rows(
+  relativeResults %>%
+    select(estimate, lower, upper, outcome, database, riskStratum) %>%
+    rename(c("hr" = "estimate")) %>%
+    mutate(
+      type = "single",
+      position = case_when(
+        database == "ccae" ~ 5,
+        database == "mdcr" ~ 4,
+        database == "optum_extended_dod" ~ 3,
+        database == "optum_ehr" ~ 2,
+      )
+    ),
+  metaRelativeResults %>% mutate(type = "meta")
+)
+
+combined <- combined %>%
   mutate(
     database = factor(
       x = database,
@@ -124,9 +120,6 @@ combined <- rbind(riskStratified, metaRiskStratified) %>%
     )
   ) %>%
   left_join(map_outcomes, by = c("outcome" = "outcome_id"))
-
-
-
 
 stripData <- data.frame(database = levels(combined$database)) %>%
   mutate(
@@ -257,7 +250,7 @@ p <- ggplot(
 
 fileName <- paste0(
   paste(
-    "plotMetaRiskStratified",
+    "plotMetaRiskStratifiedUncalibrated",
     analType,
     # stratification,
     sep = "_"

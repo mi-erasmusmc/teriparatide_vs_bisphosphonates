@@ -72,6 +72,14 @@ figures/plotMetaOverall_itt_att.tiff : code/plotMetaOverall.R \
 	data/processed/metaCalibrateOverall_itt_att_1095_custom.rds 
 	$< itt att 1095_custom
 
+figures/plotMetaOverallUncalibrated_itt_att_1095_custom.tiff : code/plotMetaOverallUncalibrated.R \
+	data/raw/mappedOverallResults.rds
+	$< itt att 1095_custom
+
+figures/plotMetaRiskStratifiedUncalibrated_itt_att_1095_custom.tiff : code/plotMetaRiskStratifiedUncalibrated.R \
+	data/raw/mappedOverallRelativeResults.rds
+	$< itt att 1095_custom
+
 data/processed/calibrateRiskStratified_itt_att_1095_custom.rds : code/calibrateRiskStratified.R\
 	data/raw/negativeControls.rds\
 	data/raw/mappedOverallRelativeResults.rds

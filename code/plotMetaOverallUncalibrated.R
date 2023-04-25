@@ -1,14 +1,14 @@
 #!/usr/bin/env Rscript
 
+# ==============================================================================
 # Description:
 #   Generates the plot regarding the meta-analysis of the calibrated hazard
 #   ratios for the three outcomes
 # Depends:
-#   data/raw/map_outcomes.rds
-#   data/processed/calibrateOverallResults.rds
-#   data/processed/metaCalibrateOverall.rds
+#   data/raw/mappedOverallResults.rds
 # Output:
-#   figures/plotMetaRiskStratifed_xxx.pdf
+#   figures/plotMetaOverallUncalibrated_xx_xx_xx.tiff
+# ==============================================================================
 
 suppressPackageStartupMessages({
   library(tidyverse)
@@ -20,6 +20,8 @@ protocol <- args[1]
 estimand <- args[2]
 analysis <- args[3]
 
+analType <- paste(protocol, estimand, analysis, sep = "_")
+
 message(rep("=", 80))
 message(crayon::bold("SETTINGS"))
 message(paste0("args_protocol:  ", protocol))
@@ -27,105 +29,86 @@ message(paste0("args_estimand:  ", estimand))
 message(paste0("args_analysis:  ", analysis))
 message(rep("=", 80))
 
-if (analysis == "1095_custom") {
-  stratification <- 5402
-  riskLevels <- c(
-    "Hip fracture risk below 3%",
-    "Hip fracture risk above 3%"
-  )
-} else {
-  stratification <- 5403
-  riskLevels <- c(
-    "Low major\nosteoporotic fracture risk",
-    "High major\nosteoporotic fracture risk"
-  )
-}
-# stratification <- as.numeric(args[4])
-analType <- paste(protocol, estimand, analysis, sep = "_")
-
-map_outcomes <- readRDS(
-  "data/raw/map_outcomes.rds"
-)
-
-calibrateRiskStratified <- readRDS(
-  file.path(
-    "data/processed",
-    paste0(
-      paste(
-        "calibrateRiskStratified",
-        analType,
-        sep = "_"
-      ),
-      ".rds"
-    )
-  )
-) %>%
-  filter(
-    analysisType == analType,
-    stratOutcome == stratification
-  ) %>%
-  rename("outcome" = "estOutcome")
-
-metaCalibrateRiskStratified <- readRDS(
-  file.path(
-    "data/processed",
-    paste0(
-      paste(
-        "metaCalibrateRiskStratified",
-        analType,
-        sep = "_"
-      ),
-      ".rds"
-    )
-  )
-) %>%
-  filter(
-    analysisType == analType,
-    stratOutcome == stratification
-  ) %>%
-  rename("outcome" = "estOutcome")
-
-riskStratified <- calibrateRiskStratified %>%
+relativeResults <- readRDS("data/raw/mappedOverallResults.rds") %>%
   mutate(
-    hr = exp(logRr),
-    lower    = exp(logLb95Rr),
-    upper    = exp(logUb95Rr)
+    logRr = log(estimate),
+    database = stringr::str_to_lower(database)
   ) %>%
-  select(-contains("Rr")) %>%
+  filter(analysisType == analType) %>%
+  rename(c("outcome" = "outcomeId"))
+
+suffix <- paste(protocol, estimand, analysis, sep = "_")
+
+metaAnalysis <- function(data) {
+  metaRes <- meta::metagen(
+    TE = data$logRr,
+    seTE = data$seLogRr,
+    sm = "HR",
+    method.tau = "PM",
+    studlab = data$database
+  )
+
+  res <- tibble(
+    hr = exp(metaRes$TE.random),
+    lower = exp(metaRes$lower.random),
+    upper = exp(metaRes$upper.random)
+  )
+
+  return(res)
+
+}
+
+metaRelativeResults <- relativeResults %>%
+  mutate(
+    logRr = log(estimate)
+  ) %>%
+  filter(analysisType == analType) %>%
+  group_by(outcome) %>%
+  nest() %>%
+  mutate(
+    ll = map(
+      .x = data,
+      .f = ~metaAnalysis(.x)
+    )
+  ) %>%
+  unnest(cols = ll) %>%
+  select(-data) %>%
+  mutate(
+    database = "overall",
+    position = 1
+  )
+
+combined <- bind_rows(
+  relativeResults %>%
+    select(estimate, lower, upper, outcome, database) %>%
+    rename(c("hr" = "estimate")) %>%
   mutate(
     type = "single",
     position = case_when(
       database == "ccae" ~ 5,
       database == "mdcr" ~ 4,
       database == "optum_extended_dod" ~ 3,
-      database == "optum_ehr" ~ 2
+      database == "optum_ehr" ~ 2,
     )
-  )
-
-metaRiskStratified <- metaCalibrateRiskStratified %>%
-  mutate(
-    database = "overall",
-    type     = "meta",
-    position = 1
-  ) %>%
-  relocate(database, .after = stratOutcome)
-
-combined <- rbind(riskStratified, metaRiskStratified) %>%
+  ),
+  metaRelativeResults %>% mutate(type = "meta")
+) %>%
   mutate(
     database = factor(
       x = database,
       levels = c("overall", "optum_ehr", "optum_extended_dod", "mdcr", "ccae"),
       labels = c("Overall", "Optum-EHR", "Optum-DOD", "MDCR", "CCAE")
     ),
-    riskStratum = factor(
-      x = riskStratum,
-      levels = c("Q1", "Q2"),
-      labels = riskLevels
+    outcome = factor(
+      x = outcome,
+      levels = 5402:5404,
+      labels = c(
+        "Hip fracture",
+        "Major osteoporotic fracture",
+        "Vertebral fracture"
+      )
     )
-  ) %>%
-  left_join(map_outcomes, by = c("outcome" = "outcome_id"))
-
-
+  )
 
 
 stripData <- data.frame(database = levels(combined$database)) %>%
@@ -157,12 +140,15 @@ annotationTeriparatide <- data.frame(
   riskStratum = factor(
     "Q2",
     levels = c("Q1", "Q2"),
-    labels = riskLevels
+    labels = c(
+      "Hip fracture risk below 2.5%",
+      "Hip fracture risk above 2.5%"
+    )
   )
 )
 
 annotationBisphposphonates <- data.frame(
-  hr = 1.68,
+  hr = 1.7,
   position = .8,
   lower = 1,
   upper = 1,
@@ -171,7 +157,10 @@ annotationBisphposphonates <- data.frame(
   riskStratum = factor(
     "Q2",
     levels = c("Q1", "Q2"),
-    labels = riskLevels
+    labels = c(
+      "Hip fracture risk below 2.5%",
+      "Hip fracture risk above 2.5%"
+    )
   )
 )
 
@@ -185,11 +174,8 @@ p <- ggplot(
     color = type,
   )
 ) +
-  ggh4x::facet_grid2(
-    vars(riskStratum),
-    vars(outcome_name)
-    # axes = "x",
-    # remove_labels = "x"
+  facet_wrap(
+    ~outcome
   ) +
   geom_ribbon(
     data = stripData,
@@ -255,19 +241,22 @@ p <- ggplot(
     strip.text       = element_text(size = 8.5)
   )
 
+
 fileName <- paste0(
   paste(
-    "plotMetaRiskStratified",
-    analType,
-    # stratification,
+    "plotMetaOverallUncalibrated",
+    protocol,
+    estimand,
+    analysis,
     sep = "_"
   ),
   ".tiff"
 )
+
 ggsave(
   file.path("figures", fileName),
   plot = p,
-  height = 4,
+  height = 3,
   width = 7,
   compression = "lzw+p",
   dpi = 1000
