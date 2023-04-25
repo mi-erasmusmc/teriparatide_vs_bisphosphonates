@@ -110,12 +110,24 @@ metaRiskStratified <- metaCalibrateRiskStratified %>%
   ) %>%
   relocate(database, .after = stratOutcome)
 
-combined <- rbind(riskStratified, metaRiskStratified) %>%
+veroTrial <- data.frame(
+  riskStratum = c("Q1", "Q2"),
+  database = "vero",
+  type = "rct",
+  position = 0,
+  outcome = 5403,
+  stratOutcome = 5402,
+  hr = 0.44,
+  lower = 0.22,
+  upper = 0.87
+)
+
+combined <- rbind(riskStratified, metaRiskStratified, veroTrial) %>%
   mutate(
     database = factor(
       x = database,
-      levels = c("overall", "optum_ehr", "optum_extended_dod", "mdcr", "ccae"),
-      labels = c("Overall", "Optum-EHR", "Optum-DOD", "MDCR", "CCAE")
+      levels = c("vero", "overall", "optum_ehr", "optum_extended_dod", "mdcr", "ccae"),
+      labels = c("VERO", "Overall", "Optum-EHR", "Optum-DOD", "MDCR", "CCAE")
     ),
     riskStratum = factor(
       x = riskStratum,
@@ -132,7 +144,7 @@ stripData <- data.frame(database = levels(combined$database)) %>%
   mutate(
     xmin = 0,
     xmax = 2,
-    position = 1:5,
+    position = 0:5,
     y_min = position - .5,
     y_max = position + .5,
     fill = rep(c("a", "b"), length.out = nrow(.))
@@ -142,14 +154,15 @@ stripData <- data.frame(database = levels(combined$database)) %>%
     values_to = "x",
     names_to = "xmin_xmax"
   ) %>%
-  select(-xmin_xmax)
+  select(-xmin_xmax) %>%
+  mutate(fill = ifelse(database == "VERO", "c", fill))
 
 
 
 
 annotationTeriparatide <- data.frame(
   hr = .279,
-  position = .8,
+  position = .9,
   lower = 1,
   upper = 1,
   type = "single",
@@ -163,7 +176,7 @@ annotationTeriparatide <- data.frame(
 
 annotationBisphposphonates <- data.frame(
   hr = 1.68,
-  position = .8,
+  position = .9,
   lower = 1,
   upper = 1,
   type = "single",
@@ -228,16 +241,16 @@ p <- ggplot(
     labels = combined$database
   ) +
   scale_color_manual(
-    breaks = c("meta", "single"),
-    values = c("red", "black")
+    breaks = c("meta", "single", "rct"),
+    values = c("red", "black", "orange")
   ) +
   scale_fill_manual(
-    breaks = c("meta", "single", "a", "b"),
-    values = c("red", "black", "#D6E0F0", "#8D93AB")
+    breaks = c("meta", "single", "rct", "a", "b", "c"),
+    values = c("red", "black", "orange", "#D6E0F0", "#8D93AB", "#6D7B8D")
   ) +
   scale_shape_manual(
-    breaks = c("meta", "single"),
-    values = c(23, 21)
+    breaks = c("meta", "single", "rct"),
+    values = c(23, 21, 21)
   ) +
   xlab("Calibrated hazard ratio") +
   # theme_void() +
