@@ -120,6 +120,8 @@ figures/overallPsDensity_itt_att_1095_custom.tiff : code/PlotPsDensity.R\
 	data/raw/overall_psDensity_optum_extended_dod_itt_optum_extended_dod_itt_att_1095_custom_6889_6888_5402.rds
 	$< itt att 1095_custom
 
+figures/riskStratifiedNcPlot_itt_att_1095_custom.pdf : code/plotRiskStratifiedNegativeControls.R
+	$< itt att 1095_custom
 
 # ======================================================================================================
 # Stratification on major osteoporotic fracture risk
@@ -157,6 +159,8 @@ figures/overallCovariateBalance_itt_att_1095_gl.tiff : code/PlotCovariateBalance
 figures/overallPsDensity_itt_att_1095_gl.tiff : code/PlotPsDensity.R
 	$< itt att 1095_gl
 
+figures/riskStratifiedNcPlot_itt_att_1095_gl.pdf : code/plotRiskStratifiedNegativeControls.R
+	$< itt att 1095_gl
 
 # ======================================================================================================
 # RENDER MANUSCRIPT
